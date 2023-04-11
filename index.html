@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Music Playlist Player">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Reyhan Billy">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music</title>
+    <link rel="shortcut icon" href="assets/music.png" type="image/x-icon">
+    <link rel = "stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel = "stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/71592d007e.js" crossorigin="anonymous"></script>
+    <style>
+
+        body{
+            background-image: linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.649)) ,url(assets/Alter-Ego-MPL.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            overflow: hidden;
+        }
+        #content
+        {
+            position:relative;
+            overflow:hidden;
+            z-index: 100;
+
+        }
+        #card
+        {
+            border-radius:10%;
+            background-color: rgba(255, 255, 255, 0.256);
+            backdrop-filter: blur(10px);
+        }
+        .song-image
+        {
+            height : 35vh;
+            width : 35vh;
+            box-shadow: 0 1px 10px 12px rgba(171, 171, 171, 0.505);
+            border-radius: 50%;
+        }
+
+        .song-image.active
+        {
+            -webkit-animation: rotation 5s infinite linear;
+            animation: rotation 5s infinite linear;
+        }
+
+        .song-image.active.paused
+        {
+            -webkit-animation-play-state: paused;
+            animation-play-state: paused;
+        }
+
+        @keyframes rotation
+        {
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(359deg);
+            }
+        }
+        .card-title,
+        .card-text i
+        {
+            color : white;
+        }
+
+        input{
+            appearance:none;
+            -webkit-appearance: none;
+            width : 10rem;
+            height: 6px;
+            border-radius: 10px;
+            background-color: burlywood;
+            opacity : 0.7;
+            transition : .3s ease;
+            -webkit-transition : .3s ease;
+        }
+        input::-webkit-slider-thumb
+        {
+            -webkit-appearance:none;
+            width : .4rem;
+            height: 6px;
+            background-color:aqua
+        }
+        input:hover
+        {
+            opacity:1;
+        }
+        .g-snows {
+        
+        width: 100%;
+        height: 100%;
+        
+        background-color: rgba(238, 234, 234, 0);
+        }   
+
+        .g-snows>li {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        z-index: 100;
+        border-radius: 100%;
+        background-color: #FFFFFF;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        -webkit-animation-name: snow-drop;
+        animation-name: snow-drop;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-timing-function: linear;
+        animation-timing-function: linear;
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+    }
+
+    .g-snows>li:nth-child(1) {
+        left: 40%;
+        width: 2px;
+        height: 2px;
+        -webkit-animation-duration: 6810ms;
+        animation-duration: 6810ms;
+        -webkit-animation-delay: 1393ms;
+        animation-delay: 1393ms;
+        -webkit-filter: blur(1px);
+        filter: blur(1px);
+    }
+
+    .g-snows>li:nth-child(2) {
+        left: 80%;
+        width: 8px;
+        height: 8px;
+        -webkit-animation-duration: 5005ms;
+        animation-duration: 5005ms;
+        -webkit-animation-delay: 123ms;
+        animation-delay: 123ms;
+        -webkit-filter: blur(1px);
+        filter: blur(1px);
+    }
+
+    .g-snows>li:nth-child(3) {
+        left: 28%;
+        width: 13px;
+        height: 13px;
+        -webkit-animation-duration: 10000ms;
+        animation-duration: 10000ms;
+        -webkit-animation-delay: 4283ms;
+        animation-delay: 4283ms;
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    .g-snows>li:nth-child(4) {
+        left: 16%;
+        width: 15px;
+        height: 15px;
+        -webkit-animation-duration: 7139ms;
+        animation-duration: 7139ms;
+        -webkit-animation-delay: 4935ms;
+        animation-delay: 4935ms;
+        -webkit-filter: blur(3px);
+        filter: blur(3px);
+    }
+
+    .g-snows>li:nth-child(5) {
+        left: 28%;
+        width: 13px;
+        height: 13px;
+        -webkit-animation-duration: 10000ms;
+        animation-duration: 10000ms;
+        -webkit-animation-delay: 4283ms;
+        animation-delay: 4283ms;
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+    }
+
+    .g-snows>li:nth-child(6) {
+        left: 16%;
+        width: 15px;
+        height: 15px;
+        -webkit-animation-duration: 7139ms;
+        animation-duration: 7139ms;
+        -webkit-animation-delay: 4935ms;
+        animation-delay: 4935ms;
+        -webkit-filter: blur(3px);
+        filter: blur(3px);
+    }
+
+    .g-snows>li:nth-child(5) {
+        left: 21%;
+        width: 1px;
+        height: 1px;
+        -webkit-animation-duration: 6939ms;
+        animation-duration: 6939ms;
+        -webkit-animation-delay: 3632ms;
+        animation-delay: 3632ms;
+        -webkit-filter: blur(1px);
+        filter: blur(1px);
+    }
+
+    @-webkit-keyframes snow-drop {
+        0% {
+            -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+            opacity: 0.5;
+            margin-left: 0;
+        }
+        10% {
+            margin-left: 15px;
+        }
+        20% {
+            margin-left: 20px;
+        }
+        25% {
+            -webkit-transform: translate(0, 166.6666666667px);
+            transform: translate(0, 166.6666666667px);
+            opacity: 0.75;
+        }
+        30% {
+            margin-left: 15px;
+        }
+        40% {
+            margin-left: 0;
+        }
+        50% {
+            -webkit-transform: translate(0, 333.3333333333px);
+            transform: translate(0, 333.3333333333px);
+            opacity: 1;
+            margin-left: -15px;
+        }
+        60% {
+            margin-left: -20px;
+        }
+        70% {
+            margin-left: -15px;
+        }
+        75% {
+            -webkit-transform: translate(0, 500px);
+            transform: translate(0, 500px);
+            opacity: 0.5;
+        }
+        80% {
+            margin-left: 0;
+        }
+        100% {
+            -webkit-transform: translate(0, 666.6666666667px);
+            transform: translate(0, 666.6666666667px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes snow-drop {
+        0% {
+            -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+            opacity: 0.5;
+            margin-left: 0;
+        }
+        10% {
+            margin-left: 15px;
+        }
+        20% {
+            margin-left: 20px;
+        }
+        25% {
+            -webkit-transform: translate(0, 166.6666666667px);
+            transform: translate(0, 166.6666666667px);
+            opacity: 0.75;
+        }
+        30% {
+            margin-left: 15px;
+        }
+        40% {
+            margin-left: 0;
+        }
+        50% {
+            -webkit-transform: translate(0, 333.3333333333px);
+            transform: translate(0, 333.3333333333px);
+            opacity: 1;
+            margin-left: -15px;
+        }
+        60% {
+            margin-left: -20px;
+        }
+        70% {
+            margin-left: -15px;
+        }
+        75% {
+            -webkit-transform: translate(0, 500px);
+            transform: translate(0, 500px);
+            opacity: 0.5;
+        }
+        80% {
+            margin-left: 0;
+        }
+        100% {
+            -webkit-transform: translate(0, 666.6666666667px);
+            transform: translate(0, 666.6666666667px);
+            opacity: 0;
+        }
+    }
+    .nav-icon
+    {
+        position :absolute;
+        z-index:1000;
+        color :white;
+        font-size : 2.4rem;
+        right : 7%;
+        top : 3%;
+        cursor: pointer;
+    }
+    .track-wrapper
+    {
+        height : 90%;
+        width : 92%;
+        max-height:100%;
+        background-color: rgba(61, 7, 7, 0.34);
+        backdrop-filter: blur(5px);
+        position : absolute;
+        z-index: 999;
+        border-radius: 10%;
+        top : 5%;
+        padding :  0px 30px;
+        overflow-y:scroll;
+        transform : translateY(100%);
+        transition : .5s ease;
+        opacity : 0;
+        /* display: none; */
+    }
+    .track-wrapper.active
+    {
+        transform : translateY(0);
+        opacity : 1;
+    }
+    ::-webkit-scrollbar
+    {
+        appearance: none;
+    }
+    .track-wrapper li
+    {
+        display:flex ;
+        margin : 5px ;
+        transition : .3s ease;
+        cursor:pointer;
+    }
+
+    .track-wrapper li:hover
+    {
+        scale : 1.1;
+    }
+
+    .track-wrapper .track-title
+    {
+        display : flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .track-wrapper li span
+    {
+        color : rgb(255, 255, 255); font: 1rem sans-serif;
+        font-weight: 600;
+        text-shadow: 0 1px 12px aqua;
+    }
+    .track-wrapper img
+    {
+        height : 6rem;
+        width: 6rem;
+        margin-right: 20px;
+        margin-bottom: 5px;
+    }
+
+
+    @media screen and (min-width:767px) {
+
+        #content div
+        {
+            scale : 1.1;
+        }
+    }
+
+    @media screen and (max-width:767px)
+    {
+        .track-wrapper{
+            height : 100%;
+            width : 100%;
+            top : 0;
+            
+        }
+        .track-wrapper li span
+        {
+            font-size: .5rem;
+        }
+        .track-wrapper img
+        {
+            height : 4rem;
+            width : 4rem
+
+        }
+    }
+    </style>
+</head>
+<body>
+
+    
+
+    <div class="container-fluid d-flex justify-content-center align-items-center" id="content"style="height:100vh">
+
+        <div class="card p-4 col-md-4 d-flex flex-column align-items-center justify-content-between gap-2"id="card">
+            <div class="nav-icon"><i class="bi bi-list" id="navicon"></i></div>
+            <div class="track-wrapper">
+                <ul class="my-5 list-unstyled">
+                    <li class="border-bottom"  id = "0"onclick="changeTrack(this.id)">
+                        <img src="assets/title.jfif" ></img>
+                        <div class="track-title">
+                            <span>(1) &ensp; Feby Putri - Friendzone</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 02:58 </span>
+                        </div>  
+                    </li>
+
+                    <li class="border-bottom" id = "1"onclick="changeTrack(this.id)">
+                        <img src="assets/title2.jpg" ></img>
+                        <div class="track-title">
+                            <span>(2) &ensp; Juicy Luicy - Tampar</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 03:32 </span>
+                        </div>  
+                    </li>
+                    <li class="border-bottom"id = "2"onclick="changeTrack(this.id)" >
+                        <img src="assets/title3.jfif" ></img>
+                        <div class="track-title">
+                            <span>(3) &ensp; Juicy Luicy - Lantas</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 04:02</span>
+                        </div>  
+                    </li>
+                    <li class="border-bottom" id = "3"onclick="changeTrack(this.id)" >
+                        <img src="assets/title4.jpg" ></img>
+                        <div class="track-title">
+                            <span>(4) &ensp; JKT48 - Heavy Rotation</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 04:42 </span>
+                        </div>  
+                    </li>
+                    <li class="border-bottom" id = "4"onclick="changeTrack(this.id)">
+                        <img src="assets/title5.jfif" ></img>
+                        <div class="track-title">
+                            <span>(5) &ensp; Disenchanted - My Chemical Romance</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 04:55 </span>
+                        </div>  
+                    </li>
+                    <li class="border-bottom" id = "5"onclick="changeTrack(this.id)">
+                        <img src="assets/title6.jpg" ></img>
+                        <div class="track-title">
+                            <span>(6) &ensp; Yoasobi - Yoru ni Kakeru</span>
+                            <span> &ensp; &ensp; &ensp; &nbsp;00:00 - 04:31 </span>
+                        </div>  
+                    </li>
+                </ul>
+            </div>
+            <div class="card-title">
+                <img class ="song-image"id = "song-image"src="assets/title.jfif" style="scale:0.8">
+            </div>
+            <div class="card-text mb-4">
+                <span style="color:white; font-weight: 700;" class="song-title">Friendzone - Feby Putri</span>
+                <div class="lyrics"></div>
+                <audio controls style = "display:none" src="assets/Music1.mp3" id = "music" type="audio/mpeg" preload="metadata">
+                </audio>
+            </div>
+            <div class="card-text d-flex justify-content-around mb-4"style="font-size:2rem; width : 80%">
+                <i class="bi bi-skip-backward-circle" id="previous"style="cursor:pointer"></i>
+                <i class="bi bi-play-circle fa-beat-fade" id="toggle" onclick ="playPause()" style="cursor:pointer"></i>
+                <i class="bi bi-skip-forward-circle" id="next"style="cursor:pointer"></i>
+            </div>
+            <div class="card-text d-flex justify-content-around align-items-center gap-2 mb-2"style="color : white;font-size:1.1rem; width:80%">
+                <span class="current-time" >00:00</span>
+                <input type="range" min="1" max="100" value="1" class="music_slider">
+                <span class="total-time">00:00</span>
+            </div>
+
+            <div class="card-text d-flex justify-content-around align-items-center gap-3"style="color : white;font-size:.9rem; width:80%">
+                <i class="fa fa-volume-down"></i>
+                <input type="range" min="0" max="100"value="100" class="volume_slider">
+                <i class="fa fa-volume-up"></i>
+            </div>
+        </div>
+    </div>
+    <ul class="g-snows" id="jsi-snows">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+      <div id="overlay"></div>
+    
+    <script>
+        let musicSlider = document.querySelector('.music_slider');
+        let volumeSlider = document.querySelector('.volume_slider');
+        let curTime = document.querySelector('.current-time');
+        let totalTime= document.querySelector('.total-time');
+        let songImage = document.getElementById('song-image');
+        let audio = document.getElementById('music');
+        
+        setInterval(()=>{
+            const currtime = audio.currentTime;
+            const minutes = Math.floor(currtime / 60);
+            const seconds = Math.floor(currtime % 60);
+            const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            curTime.innerHTML = formattedTime;
+            musicSlider.value = audio.currentTime;
+        },1000);
+        
+        audio.addEventListener('loadedmetadata',()=>{
+            const currtime = audio.duration;
+            const minute = Math.floor(currtime / 60);
+            const seconds = Math.floor(currtime % 60);
+            const formattedTime = `${minute.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            totalTime.textContent = formattedTime;
+            musicSlider.max = audio.duration;
+            audio.volume = volumeSlider.value /100;
+
+        });
+
+        musicSlider.addEventListener('input',()=>{
+            audio.currentTime=musicSlider.value;
+        });
+
+        volumeSlider.addEventListener('input',()=>{
+            audio.volume = volumeSlider.value/100;
+        });
+
+        let toggle = document.querySelector('.nav-icon');
+        let trackwrap = document.querySelector('.track-wrapper');
+        let icon = document.getElementById('navicon');
+
+        toggle.addEventListener('click',()=>{
+
+            trackwrap.classList.toggle("active");
+
+            setTimeout(() => {
+                icon.classList.toggle("bi-list");
+                icon.classList.toggle("bi-x");
+            }, 300);
+
+        });
+
+        let trackList = 
+            [
+                {
+                    title: "Friendzone - Feby Putri",
+                    path:"assets/Music1.mp3",
+                    image: "assets/title.jfif"
+                },
+                {
+                    title: "Tampar - Juicy Luicy",
+                    path:"assets/Music2.mp3",
+                    image: "assets/title2.jpg"
+                },
+                {
+                    title: "Lantas - Juicy Luicy",
+                    path:"assets/Music3.mp3",
+                    image: "assets/title3.jfif"
+                },
+                {
+                    title: "Heavy Rotation - JKT48",
+                    path:"assets/Music4.mp3",
+                    image: "assets/title4.jpg"
+                },
+                {
+                    title: "My Chemical Romance - Disenchanted",
+                    path:"assets/Music5.mp3",
+                    image: "assets/title5.jfif"
+                },
+                {
+                    title: "Yoru ni Kakeru - Yoaasobi",
+                    path:"assets/Music6.mp3",
+                    image: "assets/title6.jpg"
+                }
+            ];
+        let currentTrack = 0 ;
+        function changeTrack(obj)
+        {
+            let songTitle = document.querySelector('.song-title');
+            let imagePath = document.getElementById('song-image');
+            songTitle.textContent = trackList[obj].title;
+            audio.src = trackList[obj].path;
+            imagePath.src = trackList[obj].image;
+            currentTrack = obj;
+            audio.addEventListener('loadedmetadata',()=>{
+            const currtime = audio.duration;
+            const minute = Math.floor(currtime / 60);
+            const seconds = Math.floor(currtime % 60);
+            const formattedTime = `${minute.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            totalTime.textContent = formattedTime;
+            musicSlider.max = audio.duration;
+            audio.volume = volumeSlider.value /100;
+            songImage.classList.remove("active");
+            playPause();
+        });
+        }
+
+
+        let prev = document.getElementById('previous');
+        let next = document.getElementById('next');
+
+
+        prev.addEventListener('click',()=>{
+            if(currentTrack!=0)
+            {
+                let Track = currentTrack-1;
+                changeTrack(Track);
+            }
+            songImage.classList.remove("active");
+        });
+
+        next.addEventListener('click',()=>{
+            const trackLength = trackList.length;
+            if(currentTrack < trackLength-1){changeTrack(currentTrack+1);}
+            const toggle = document.getElementById('toggle');
+            if(toggle.classList.contains("bi-pause-circle")){
+                toggle.classList.remove("bi-pause-circle");
+                toggle.classList.add("bi-play-circle");
+                songImage.classList.remove("active");
+            }
+                
+        });
+
+        audio.addEventListener('ended', ()=>
+        {   
+            
+            if(currentTrack>=trackList.length-1){changeTrack(0);}
+            else{next.click();}
+            
+        }) ;
+
+        function playPause()
+        {   
+            const toggle = document.getElementById('toggle');
+            if(toggle.classList.contains("bi-play-circle"))
+            {
+                toggle.classList.remove("bi-play-circle");
+                toggle.classList.add("bi-pause-circle");
+                songImage.classList.add("active");
+                songImage.classList.remove("paused");
+                audio.play();
+            }
+                
+            else if(toggle.classList.contains("bi-pause-circle")){
+                toggle.classList.remove("bi-pause-circle");
+                toggle.classList.add("bi-play-circle");
+                songImage.classList.add("paused");
+                audio.pause();
+            }
+        }
+
+
+    </script>
+</body>
+</html>
