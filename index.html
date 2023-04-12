@@ -536,11 +536,11 @@
             audio.volume = volumeSlider.value/100;
         });
 
-        let toggle = document.querySelector('.nav-icon');
+        let sidebarToggle = document.querySelector('.nav-icon');
         let trackwrap = document.querySelector('.track-wrapper');
         let icon = document.getElementById('navicon');
 
-        toggle.addEventListener('click',()=>{
+        sidebarToggle.addEventListener('click',()=>{
 
             trackwrap.classList.toggle("active");
 
@@ -601,7 +601,12 @@
             totalTime.textContent = formattedTime;
             musicSlider.max = audio.duration;
             audio.volume = volumeSlider.value /100;
-            songImage.classList.remove("active");
+            const toggle = document.getElementById('toggle');
+            if(toggle.classList.contains("bi-pause-circle"))
+            {
+                toggle.classList.toggle("bi-pause-circle");
+                toggle.classList.toggle("bi-play-circle");
+            }
             playPause();
         });
         }
@@ -617,19 +622,12 @@
                 let Track = currentTrack-1;
                 changeTrack(Track);
             }
-            songImage.classList.remove("active");
         });
 
         next.addEventListener('click',()=>{
             const trackLength = trackList.length;
             if(currentTrack < trackLength-1){changeTrack(currentTrack+1);}
-            const toggle = document.getElementById('toggle');
-            if(toggle.classList.contains("bi-pause-circle")){
-                toggle.classList.remove("bi-pause-circle");
-                toggle.classList.add("bi-play-circle");
-                songImage.classList.remove("active");
-            }
-                
+            const toggle = document.getElementById('toggle');  
         });
 
         audio.addEventListener('ended', ()=>
